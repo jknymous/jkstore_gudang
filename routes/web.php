@@ -35,12 +35,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
         // Route untuk admin
-        // contoh: Route::get('/users', [UserController::class, 'index']);
+        Route::resource('toko', \App\Http\Controllers\TokoController::class);
     });
     
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {
         // Route untuk gudang
-        // contoh: Route::get('/barang', [BarangController::class, 'index']);
     });
 });
 
