@@ -19,6 +19,11 @@
                     <x-nav-link :href="route('toko.index')" :active="request()->is('admin/toko*')">
                         {{ __('Toko') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="auth()->user()->role === 'admin' ? url('admin/barang') : url('gudang/barang')" 
+                        :active="request()->is('admin/barang*') || request()->is('gudang/barang*')">
+                        {{ __('Barang') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -77,6 +82,11 @@
 
             <x-responsive-nav-link :href="route('toko.index')" :active="request()->is('admin/toko*')">
                 {{ __('Toko') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="auth()->user()->role === 'admin' ? url('admin/barang') : url('gudang/barang')" 
+                :active="request()->is('admin/barang*') || request()->is('gudang/barang*')">
+                {{ __('Barang') }}
             </x-responsive-nav-link>
         </div>
 

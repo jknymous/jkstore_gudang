@@ -36,10 +36,12 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
         // Route untuk admin
         Route::resource('toko', \App\Http\Controllers\TokoController::class);
+        Route::resource('barang', \App\Http\Controllers\BarangController::class);
     });
     
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {
         // Route untuk gudang
+        Route::resource('barang', \App\Http\Controllers\BarangController::class);
     });
 });
 
