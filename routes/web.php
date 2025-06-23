@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\TokoController;
+use App\Http\Controllers\BarangController;
+use App\Http\Controllers\StokKeluarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,13 +38,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::middleware(['auth', 'isAdmin'])->prefix('admin')->group(function () {
         // Route untuk admin
-        Route::resource('toko', \App\Http\Controllers\TokoController::class);
-        Route::resource('barang', \App\Http\Controllers\BarangController::class);
+        Route::resource('toko', TokoController::class);
+        Route::resource('barang', BarangController::class);
+        Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
     });
     
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {
         // Route untuk gudang
-        Route::resource('barang', \App\Http\Controllers\BarangController::class);
+        Route::resource('barang', BarangController::class);
+        Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
     });
 });
 

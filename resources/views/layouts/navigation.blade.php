@@ -24,6 +24,11 @@
                         :active="request()->is('admin/barang*') || request()->is('gudang/barang*')">
                         {{ __('Barang') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="auth()->user()->role === 'admin' ? url('admin/stok-keluar') : url('gudang/stok-keluar')" 
+                        :active="request()->is('admin/stok-keluar*') || request()->is('gudang/stok-keluar*')">
+                        {{ __('Stok Keluar') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -87,6 +92,11 @@
             <x-responsive-nav-link :href="auth()->user()->role === 'admin' ? url('admin/barang') : url('gudang/barang')" 
                 :active="request()->is('admin/barang*') || request()->is('gudang/barang*')">
                 {{ __('Barang') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="auth()->user()->role === 'admin' ? url('admin/stok-keluar') : url('gudang/stok-keluar')" 
+                :active="request()->is('admin/stok-keluar*') || request()->is('gudang/stok-keluar*')">
+                {{ __('Stok Keluar') }}
             </x-responsive-nav-link>
         </div>
 
