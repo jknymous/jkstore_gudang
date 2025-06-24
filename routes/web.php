@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\StokKeluarController;
+use App\Http\Controllers\PurchaseController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,12 +42,14 @@ Route::middleware('auth')->group(function () {
         Route::resource('toko', TokoController::class);
         Route::resource('barang', BarangController::class);
         Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
+        Route::resource('purchase', PurchaseController::class);
     });
     
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {
         // Route untuk gudang
         Route::resource('barang', BarangController::class);
         Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
+        Route::resource('purchase', PurchaseController::class);
     });
 });
 

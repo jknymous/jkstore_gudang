@@ -29,6 +29,11 @@
                         :active="request()->is('admin/stok-keluar*') || request()->is('gudang/stok-keluar*')">
                         {{ __('Stok Keluar') }}
                     </x-nav-link>
+
+                    <x-nav-link :href="auth()->user()->role === 'admin' ? url('admin/purchase') : url('gudang/purchase')" 
+                        :active="request()->is('admin/purchase*') || request()->is('gudang/purchase*')">
+                        {{ __('Purchase') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -97,6 +102,11 @@
             <x-responsive-nav-link :href="auth()->user()->role === 'admin' ? url('admin/stok-keluar') : url('gudang/stok-keluar')" 
                 :active="request()->is('admin/stok-keluar*') || request()->is('gudang/stok-keluar*')">
                 {{ __('Stok Keluar') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link :href="auth()->user()->role === 'admin' ? url('admin/purchase') : url('gudang/purchase')" 
+                :active="request()->is('admin/purchase*') || request()->is('gudang/purchase*')">
+                {{ __('Purchase') }}
             </x-responsive-nav-link>
         </div>
 
