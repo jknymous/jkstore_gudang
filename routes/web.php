@@ -43,6 +43,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('barang', BarangController::class);
         Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
         Route::resource('purchase', PurchaseController::class);
+        Route::post('purchase/{id}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
+        Route::post('purchase/{id}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
     });
     
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {
@@ -50,6 +52,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('barang', BarangController::class);
         Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
         Route::resource('purchase', PurchaseController::class);
+        Route::post('purchase/{id}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
+        Route::post('purchase/{id}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
     });
 });
 

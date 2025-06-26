@@ -38,8 +38,33 @@
                                 </span>
                             </td>
                             <td class="px-4 py-2 space-x-1">
-                                <!-- Tombol aksi nanti -->
-                                {{-- Tombol aksi akan ditambahkan di step berikutnya --}}
+                                <a href="{{ url(request()->segment(1).'/purchase/'.$purchase->id.'/edit') }}"
+                                    class="bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded text-xs">
+                                    Edit
+                                </a>
+                                <form action="{{ url(request()->segment(1).'/purchase/'.$purchase->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Yakin hapus data ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">
+                                        Hapus
+                                    </button>
+                                </form>
+                            
+                                @if($purchase->status === 'pending')
+                                    <form action="{{ url(request()->segment(1).'/purchase/'.$purchase->id.'/selesai') }}" method="POST" class="inline-block">
+                                        @csrf
+                                        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs">
+                                            Selesai
+                                        </button>
+                                    </form>
+                            
+                                    <form action="{{ url(request()->segment(1).'/purchase/'.$purchase->id.'/retur') }}" method="POST" class="inline-block">
+                                        @csrf
+                                        <button type="submit" class="bg-red-400 hover:bg-red-500 text-white px-2 py-1 rounded text-xs">
+                                            Retur
+                                        </button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @empty

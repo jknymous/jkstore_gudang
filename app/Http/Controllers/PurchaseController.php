@@ -102,4 +102,21 @@ class PurchaseController extends Controller
     {
         //
     }
+
+    public function selesai($id)
+    {
+        $purchase = Purchase::findOrFail($id);
+        $purchase->update(['status' => 'selesai']);
+
+        // Optional: update stok barang
+        $purchase->barang->increment('stok', $purchase->jumlah);
+        return back()->with('success', 'Purchase ditandai selesai dan stok diperbarui.');
+    }
+
+    public function retur($id)
+    {
+        $purchase = Purchase::findOrFail($id);
+        $purchase->update(['status' => 'retur']);
+        return back()->with('success', 'Purchase ditandai sebagai retur.');
+    }
 }
