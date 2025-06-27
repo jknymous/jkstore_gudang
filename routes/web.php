@@ -7,6 +7,7 @@ use App\Http\Controllers\TokoController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\StokKeluarController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,6 +46,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('purchase', PurchaseController::class);
         Route::post('purchase/{id}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
         Route::post('purchase/{id}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
+        Route::resource('users', UserController::class);
     });
     
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {

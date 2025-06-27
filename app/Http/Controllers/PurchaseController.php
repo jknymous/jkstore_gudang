@@ -77,7 +77,9 @@ class PurchaseController extends Controller
      */
     public function edit($id)
     {
-        //
+        $purchase = Purchase::findOrFail($id);
+        $barangs = Barang::orderBy('nama_barang')->get();
+        return view('purchase.edit', compact('purchase', 'barangs'));
     }
 
     /**
@@ -89,7 +91,22 @@ class PurchaseController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'barang_id' => 'required|exists:barangs,id',
+            'jumlah' => 'required|numeric|min:1',
+            'harga_beli' => 'required|numeric|min:0',
+            'keterangan' => 'nullable|string',
+        ]);
+    
+        $purchase = Purchase::findOrFail($id);
+        $purchase->update([
+            'barang_id' => $request->barang_id,
+            'jumlah' => $request->jumlah,
+            'harga_beli' => $request->harga_beli,
+            'keterangan' => $request->keterangan
+        ]);
+    
+        return redirect()->route('purchase.index')->with('success', 'Purchase berhasil diperbarui');
     }
 
     /**
@@ -100,7 +117,10 @@ class PurchaseController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $purchase = Purchase::findOrFail($id);
+        $purchase->delete();
+
+        return back()->with('success', 'Purchase berhasil dihapus');
     }
 
     public function selesai($id)
