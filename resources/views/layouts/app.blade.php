@@ -47,7 +47,7 @@
                 <!-- User info dan logout -->
                 <div class="px-4 py-6 border-t">
                     <a href="{{ auth()->user()->isAdmin ? url('admin/profile') : url('gudang/profile') }}"
-                        class="block px-3 py-2 rounded hover:bg-gray-200">
+                        class="block px-3 py-2 rounded hover:bg-gray-200 {{ request()->is('*/profile*') ? 'bg-gray-200 font-semibold' : '' }}">
                         {{ auth()->user()->name }}
                     </a>
                     <form method="POST" action="{{ route('logout') }}">

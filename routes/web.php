@@ -47,6 +47,8 @@ Route::middleware('auth')->group(function () {
         Route::post('purchase/{id}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
         Route::post('purchase/{id}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
         Route::resource('users', UserController::class);
+        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
     });
     
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {
@@ -56,6 +58,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('purchase', PurchaseController::class);
         Route::post('purchase/{id}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
         Route::post('purchase/{id}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
+        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 });
 
