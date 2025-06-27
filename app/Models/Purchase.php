@@ -13,6 +13,7 @@ class Purchase extends Model
         'barang_id',
         'user_id',
         'jumlah',
+        'satuan',
         'harga_beli',
         'status',
         'keterangan'

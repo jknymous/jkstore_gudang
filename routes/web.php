@@ -44,8 +44,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('barang', BarangController::class);
         Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
         Route::resource('purchase', PurchaseController::class);
-        Route::post('purchase/{id}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
-        Route::post('purchase/{id}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
+        Route::post('purchase/{purchase}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
+        Route::post('purchase/{purchase}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
         Route::resource('users', UserController::class);
         Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -56,8 +56,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('barang', BarangController::class);
         Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
         Route::resource('purchase', PurchaseController::class);
-        Route::post('purchase/{id}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
-        Route::post('purchase/{id}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
+        Route::post('purchase/{purchase}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
+        Route::post('purchase/{purchase}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');
         Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::post('profile', [ProfileController::class, 'update'])->name('profile.update');
     });

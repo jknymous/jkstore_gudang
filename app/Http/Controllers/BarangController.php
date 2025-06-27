@@ -42,7 +42,7 @@ class BarangController extends Controller
             'harga_beli' => 'nullable|integer|min:0',
         ]);
         Barang::create($request->all());
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil ditambahkan');
+        return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')->with('success', 'Barang berhasil ditambahkan');
     }
 
     /**
@@ -82,7 +82,7 @@ class BarangController extends Controller
             'harga_beli' => 'nullable|integer|min:0',
         ]);
         $barang->update($request->all());
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil diperbarui');
+        return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')->with('success', 'Barang berhasil di Update');
     }
 
     /**
@@ -94,6 +94,6 @@ class BarangController extends Controller
     public function destroy(Barang $barang)
     {
         $barang->delete();
-        return redirect()->route('barang.index')->with('success', 'Barang berhasil dihapus');
+        return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')->with('success', 'Barang berhasil di Hapus');
     }
 }
