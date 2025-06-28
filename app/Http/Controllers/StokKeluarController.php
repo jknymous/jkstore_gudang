@@ -49,6 +49,61 @@ class StokKeluarController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        return redirect()->route('stok-keluar.index')->with('success', 'Stok berhasil dikirim');
+        return redirect()->to(auth()->user()->role === 'admin' ? url('admin/stok-keluar') : url('gudang/stok-keluar'))
+                                    ->with('success', 'Purchase berhasil diupdate.');
+    }
+
+    public function edit($id)
+    {
+        $stokKeluar = StokKeluar::findOrFail($id);
+        $barangs = Barang::all();
+        $tokos = Toko::all();
+        return view('stok_keluar.edit', compact('stokKeluar', 'barangs', 'tokos'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $stokKeluar = StokKeluar::findOrFail($id);
+        $request->validate([
+            'barang_id' => 'required',
+            'toko_id' => 'required',
+            'jumlah' => 'required|integer|min:1',
+            'keterangan' => 'nullable|string',
+        ]);
+
+        // Kembalikan stok lama
+        $stokLama = $stokKeluar->jumlah;
+        $barangLama = Barang::find($stokKeluar->barang_id);
+        $barangLama->stok += $stokLama;
+        $barangLama->save();
+
+        // Update data
+        $stokKeluar->update([
+            'barang_id' => $request->barang_id,
+            'toko_id' => $request->toko_id,
+            'jumlah' => $request->jumlah,
+            'keterangan' => $request->keterangan,
+        ]);
+
+        // Kurangi stok baru
+        $barangBaru = Barang::find($request->barang_id);
+        $barangBaru->stok -= $request->jumlah;
+        $barangBaru->save();
+
+        return redirect()->to(auth()->user()->role === 'admin' ? url('admin/stok-keluar') : url('gudang/stok-keluar'))
+                                    ->with('success', 'Purchase berhasil diupdate.');
+    }
+
+    public function destroy($id)
+    {
+        $stokKeluar = StokKeluar::findOrFail($id);
+        $barang = Barang::find($stokKeluar->barang_id);
+
+        // Kembalikan stok
+        $barang->stok += $stokKeluar->jumlah;
+        $barang->save();
+        $stokKeluar->delete();
+        return redirect()->to(auth()->user()->role === 'admin' ? url('admin/stok-keluar') : url('gudang/stok-keluar'))
+                                    ->with('success', 'Purchase berhasil diupdate.');
     }
 }

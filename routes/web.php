@@ -42,7 +42,7 @@ Route::middleware('auth')->group(function () {
         // Route untuk admin
         Route::resource('toko', TokoController::class);
         Route::resource('barang', BarangController::class);
-        Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
+        Route::resource('stok-keluar', StokKeluarController::class);
         Route::resource('purchase', PurchaseController::class);
         Route::post('purchase/{purchase}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
         Route::post('purchase/{purchase}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');

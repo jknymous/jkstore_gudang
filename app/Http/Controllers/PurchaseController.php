@@ -96,26 +96,40 @@ class PurchaseController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Purchase $purchase)
+    public function update(Request $request, $id)
     {
-        $request->validate([
-            'barang_id' => 'required|exists:barangs,id',
-            'jumlah' => 'required|integer|min:1',
-            'satuan' => 'required|string|max:50',
-            'harga_beli' => 'required|numeric|min:0',
-            'keterangan' => 'nullable|string',
-        ]);
-    
-        $purchase->update([
-            'barang_id' => $request->barang_id,
-            'jumlah' => $request->jumlah,
-            'satuan' => $request->satuan,
-            'harga_beli' => $request->harga_beli,
-            'keterangan' => $request->keterangan,
-        ]);
-    
-        return redirect()->to(auth()->user()->role === 'admin' ? 'admin/purchase' : 'gudang/purchase')
-                        ->with('success', 'Data purchase berhasil diperbarui.');
+        $purchase = Purchase::findOrFail($id);
+        $oldJumlah = $purchase->jumlah;
+        $oldBarang = Barang::where('nama_barang', $purchase->barang->nama_barang)
+                            ->where('harga_beli', $purchase->harga_beli)
+                            ->first();
+        // Jika status selesai, kurangi dulu stok dari barang lama
+        if ($purchase->status === 'selesai' && $oldBarang) {
+            $oldBarang->stok -= $oldJumlah;
+            $oldBarang->save();
+        }
+        $purchase->update($request->only(['barang_id', 'jumlah', 'satuan', 'harga_beli', 'keterangan']));
+        // Kalau status selesai, tambahkan ke barang baru
+        if ($purchase->status === 'selesai') {
+            $newBarang = Barang::where('nama_barang', $purchase->barang->nama_barang)
+                                ->where('harga_beli', $purchase->harga_beli)
+                                ->first();
+            if ($newBarang) {
+                $newBarang->stok += $purchase->jumlah;
+            } else {
+                $newBarang = Barang::create([
+                    'nama_barang' => $purchase->barang->nama_barang,
+                    'satuan' => $purchase->satuan,
+                    'stok' => $purchase->jumlah,
+                    'harga_beli' => $purchase->harga_beli,
+                ]);
+            }
+            $newBarang->save();
+            $purchase->barang_id = $newBarang->id;
+            $purchase->save();
+        }
+        return redirect()->to(auth()->user()->role === 'admin' ? url('admin/purchase') : url('gudang/purchase'))
+                                    ->with('success', 'Purchase berhasil diupdate.');
     }
 
     /**
@@ -127,49 +141,67 @@ class PurchaseController extends Controller
     public function destroy($id)
     {
         $purchase = Purchase::findOrFail($id);
-
-        // Jika statusnya selesai, kurangi stok barang
         if ($purchase->status === 'selesai') {
-            $barang = Barang::find($purchase->barang_id);
+            $barang = Barang::where('nama_barang', $purchase->barang->nama_barang)
+                            ->where('harga_beli', $purchase->harga_beli)
+                            ->first();
             if ($barang) {
-                $barang->stok = max(0, $barang->stok - $purchase->jumlah);
+                $barang->stok -= $purchase->jumlah;
                 $barang->save();
             }
         }
         $purchase->delete();
-        return redirect()->back()->with('success', 'Data purchase berhasil dihapus.');
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
 
-    public function selesai(Purchase $purchase)
+    public function selesai($id)
     {
-        // Hanya bisa diproses jika masih pending
+        $purchase = Purchase::findOrFail($id);
         if ($purchase->status !== 'pending') {
-            return redirect()->back()->with('error', 'Transaksi ini sudah diproses.');
+            return back()->with('error', 'Purchase sudah diproses.');
         }
 
-        // Cari apakah sudah ada barang dengan nama dan harga yang sama
-        $existingBarang = Barang::where('nama_barang', $purchase->barang->nama_barang)
-            ->where('harga_beli', $purchase->harga_beli)
-            ->first();
+        $namaBarang = $purchase->barang->nama_barang;
+        $hargaBeli = $purchase->harga_beli;
 
-        if ($existingBarang) {
-            // Jika barang dengan harga sama ditemukan, tambah stok
-            $existingBarang->stok += $purchase->jumlah;
-            $existingBarang->save();
+        // 1. Cari barang dengan nama sama dan harga sama
+        $barang = Barang::where('nama_barang', $namaBarang)
+                        ->where('harga_beli', $hargaBeli)
+                        ->first();
+
+        if ($barang) {
+            // Harga sama → tambah stok
+            $barang->stok += $purchase->jumlah;
+            $barang->save();
+            $purchase->barang_id = $barang->id;
         } else {
-            // Jika harga beda, buat barang baru (tanpa menambahkan "(new)")
-            Barang::create([
-                'nama_barang' => $purchase->barang->nama_barang,
-                'satuan' => $purchase->satuan,
-                'stok' => $purchase->jumlah,
-                'harga_beli' => $purchase->harga_beli
-            ]);
+            // 2. Cek barang stok 0 dengan nama sama
+            $stokKosong = Barang::where('nama_barang', $namaBarang)
+                                ->where('stok', 0)
+                                ->first();
+
+            if ($stokKosong) {
+                // Ganti harga & stok
+                $stokKosong->harga_beli = $hargaBeli;
+                $stokKosong->satuan = $purchase->satuan;
+                $stokKosong->stok = $purchase->jumlah;
+                $stokKosong->save();
+                $purchase->barang_id = $stokKosong->id;
+            } else {
+                // 3. Buat barang baru
+                $barangBaru = Barang::create([
+                    'nama_barang' => $namaBarang,
+                    'satuan' => $purchase->satuan,
+                    'stok' => $purchase->jumlah,
+                    'harga_beli' => $hargaBeli,
+                ]);
+                $purchase->barang_id = $barangBaru->id;
+            }
         }
 
         $purchase->status = 'selesai';
         $purchase->save();
-
-        return redirect()->back()->with('success', 'Purchase telah diselesaikan.');
+        return redirect()->back()->with('success', 'Purchase berhasil diselesaikan.');
     }
 
     public function retur(Purchase $purchase)

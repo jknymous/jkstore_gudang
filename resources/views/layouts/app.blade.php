@@ -63,7 +63,7 @@
         <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
             <!-- Page Header -->
-            <header class="bg-white shadow p-4">
+            <header class="bg-white shadow p-5">
                 <div class="text-xl font-semibold text-gray-800">
                     {{ $header ?? '' }}
                 </div>
