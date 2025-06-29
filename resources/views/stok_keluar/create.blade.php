@@ -19,7 +19,7 @@
                 <label for="barang_id" class="block text-sm font-medium text-gray-700">Pilih Barang</label>
                 <select name="barang_id" id="barang_id" class="w-full border p-2 rounded" required>
                     @foreach($barangs as $barang)
-                        <option value="{{ $barang->id }}">{{ $barang->nama_barang }} (Stok: {{ $barang->stok }})</option>
+                        <option value="{{ $barang->id }}">{{ $barang->nama_barang }} (Stok: {{ $barang->stok }} - Rp{{ number_format($barang->harga_beli, 0, ',', '.') }})</option>
                     @endforeach
                 </select>
             </div>

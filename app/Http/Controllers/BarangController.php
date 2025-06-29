@@ -7,93 +7,78 @@ use Illuminate\Http\Request;
 
 class BarangController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $barangs = Barang::latest()->get();
         return view('barang.index', compact('barangs'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('barang.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $request->validate([
             'nama_barang' => 'required',
+            'satuan' => 'nullable|string|max:20',
             'stok' => 'nullable|integer|min:0',
             'harga_beli' => 'nullable|integer|min:0',
         ]);
-        Barang::create($request->all());
-        return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')->with('success', 'Barang berhasil ditambahkan');
+
+        try {
+            Barang::create([
+                'nama_barang' => $request->nama_barang,
+                'satuan' => $request->satuan,
+                'stok' => $request->stok,
+                'harga_beli' => $request->harga_beli,
+            ]);
+
+            return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')
+                             ->with('success', 'Barang berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat menambahkan barang.');
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Barang  $barang
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Barang $barang)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Barang  $barang
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Barang $barang)
     {
         return view('barang.edit', compact('barang'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Barang  $barang
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Barang $barang)
     {
         $request->validate([
             'nama_barang' => 'required',
+            'satuan' => 'nullable|string|max:20',
             'stok' => 'nullable|integer|min:0',
             'harga_beli' => 'nullable|integer|min:0',
         ]);
-        $barang->update($request->all());
-        return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')->with('success', 'Barang berhasil di Update');
+
+        try {
+            $barang->update([
+                'nama_barang' => $request->nama_barang,
+                'satuan' => $request->satuan,
+                'stok' => $request->stok,
+                'harga_beli' => $request->harga_beli,
+            ]);
+
+            return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')
+                             ->with('success', 'Barang berhasil diupdate.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Terjadi kesalahan saat mengupdate barang.');
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Barang  $barang
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Barang $barang)
     {
-        $barang->delete();
-        return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')->with('success', 'Barang berhasil di Hapus');
+        try {
+            $barang->delete();
+            return redirect()->to(auth()->user()->role === 'admin' ? '/admin/barang' : '/gudang/barang')
+                             ->with('success', 'Barang berhasil dihapus.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus barang.');
+        }
     }
 }

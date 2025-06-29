@@ -26,7 +26,7 @@
             </div>
 
             <div>
-                <label class="block mb-1 font-medium text-sm text-gray-700">Harga Beli</label>
+                <label class="block mb-1 font-medium text-sm text-gray-700">Harga Satuan</label>
                 <input type="number" name="harga_beli" value="{{ old('harga_beli', $barang->harga_beli) }}" class="w-full border px-3 py-2 rounded" min="0">
             </div>
 

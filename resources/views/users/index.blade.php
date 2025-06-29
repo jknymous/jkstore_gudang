@@ -19,6 +19,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">No</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Nama</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Email</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">No HP</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Aksi</th>
                     </tr>
                 </thead>
@@ -28,6 +29,7 @@
                             <td class="px-6 py-4">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4">{{ $user->name }}</td>
                             <td class="px-6 py-4">{{ $user->email }}</td>
+                            <td class="px-6 py-4">{{ $user->no_hp ?? '-' }}</td>
                             <td class="px-6 py-4 flex gap-2">
                                 <a href="{{ route('users.edit', $user) }}" class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded flex items-center text-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">

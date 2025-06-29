@@ -4,10 +4,6 @@
     </x-slot>
 
     <div class="py-6 px-8">
-        @if (session('success'))
-            <div class="mb-4 text-green-600 font-semibold">{{ session('success') }}</div>
-        @endif
-
         <div class="flex justify-end mb-4">
             <a href="{{ auth()->user()->role === 'admin' ? url('admin/barang/create') : url('gudang/barang/create') }}" 
                 class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
@@ -19,11 +15,11 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">#</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">No</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Nama</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Satuan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Stok</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Harga Beli</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Satuan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Harga Satuan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Aksi</th>
                     </tr>
                 </thead>
@@ -32,8 +28,8 @@
                         <tr class="border-b">
                             <td class="px-6 py-4">{{ $loop->iteration }}</td>
                             <td class="px-6 py-4">{{ $barang->nama_barang }}</td>
-                            <td class="px-6 py-4">{{ $barang->satuan ?? '-' }}</td>
                             <td class="px-6 py-4">{{ $barang->stok }}</td>
+                            <td class="px-6 py-4">{{ $barang->satuan ?? '-' }}</td>
                             <td class="px-6 py-4">Rp {{ number_format($barang->harga_beli ?? 0) }}</td>
                             <td class="px-6 py-4 flex gap-2">
                                 <!-- Tombol Edit -->

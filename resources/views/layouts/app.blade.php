@@ -75,5 +75,19 @@
             </main>
         </div>
     </div>
+
+    @if(session('success') || session('error'))
+    <div id="notification-toast" class="fixed top-5 right-5 z-50 px-4 py-3 rounded shadow-lg text-white
+        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+        {{ session('success') ?? session('error') }}
+    </div>
+
+    <script>
+        setTimeout(() => {
+            const toast = document.getElementById('notification-toast');
+            if (toast) toast.style.display = 'none';
+        }, 2000); // 2 detik
+    </script>
+    @endif
 </body>
 </html>

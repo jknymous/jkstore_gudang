@@ -21,6 +21,11 @@
             </div>
 
             <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700">No. HP</label>
+                <input type="number" name="no_hp" value="{{ old('no_hp', $user->no_hp) }}" class="w-full border rounded p-2">
+            </div>
+
+            <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700">Password Baru (Opsional)</label>
                 <input type="password" name="password" class="w-full border rounded p-2">
             </div>
