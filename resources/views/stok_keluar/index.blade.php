@@ -19,6 +19,8 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Tanggal</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Barang</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Jumlah</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Harga Satuan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Harga Total</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Toko Tujuan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Dikirim Oleh</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Aksi</th>
@@ -27,9 +29,13 @@
                 <tbody>
                     @forelse($data as $item)
                         <tr class="border-t">
-                            <td class="px-6 py-4">{{ $item->created_at->format('d M Y H:i') }}</td>
+                            <td class="px-6 py-4">{{ $item->created_at->format('d M Y') }}</td>
                             <td class="px-6 py-4">{{ $item->barang->nama_barang }}</td>
                             <td class="px-6 py-4">{{ $item->jumlah }}</td>
+                            <td class="px-6 py-4">Rp {{ number_format($item->barang->harga_beli ?? 0, 0, ',', '.') }}</td>
+                            <td class="px-6 py-4">
+                                Rp {{ number_format(($item->barang->harga_beli ?? 0) * $item->jumlah, 0, ',', '.') }}
+                            </td>
                             <td class="px-6 py-4">{{ $item->toko->nama_toko }}</td>
                             <td class="px-6 py-4">{{ $item->user->name }}</td>
                             <td class="px-6 py-4 flex gap-2">

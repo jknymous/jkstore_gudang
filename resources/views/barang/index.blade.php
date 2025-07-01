@@ -20,6 +20,7 @@
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Stok</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Satuan</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Harga Satuan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Harga Total</th>
                         <th class="px-6 py-3 text-left text-xs font-medium text-gray-600 uppercase">Aksi</th>
                     </tr>
                 </thead>
@@ -31,6 +32,9 @@
                             <td class="px-6 py-4">{{ $barang->stok }}</td>
                             <td class="px-6 py-4">{{ $barang->satuan ?? '-' }}</td>
                             <td class="px-6 py-4">Rp {{ number_format($barang->harga_beli ?? 0) }}</td>
+                            <td class="px-6 py-4">
+                                Rp {{ number_format(($barang->stok ?? 0) * ($barang->harga_beli ?? 0), 0, ',', '.') }}
+                            </td>
                             <td class="px-6 py-4 flex gap-2">
                                 <!-- Tombol Edit -->
                                 <a href="{{ auth()->user()->role === 'admin' ? url("admin/barang/$barang->id/edit") : url("gudang/barang/$barang->id/edit") }}" 

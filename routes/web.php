@@ -8,6 +8,8 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\StokKeluarController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\DashboardGudangController;
+use App\Http\Controllers\DashboardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,9 +28,9 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     if (auth()->user()->role === 'admin') {
-        return view('dashboard.admin');
+        return app(\App\Http\Controllers\DashboardController::class)->admin();
     } elseif (auth()->user()->role === 'gudang') {
-        return view('dashboard.gudang');
+        return app(\App\Http\Controllers\DashboardGudangController::class)->index();
     } else {
         abort(403); // role tidak dikenali
     }
@@ -54,7 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::middleware(['auth', 'isGudang'])->prefix('gudang')->group(function () {
         // Route untuk gudang
         Route::resource('barang', BarangController::class);
-        Route::resource('stok-keluar', StokKeluarController::class)->only(['index', 'create', 'store']);
+        Route::resource('stok-keluar', StokKeluarController::class);
         Route::resource('purchase', PurchaseController::class);
         Route::post('purchase/{purchase}/selesai', [PurchaseController::class, 'selesai'])->name('purchase.selesai');
         Route::post('purchase/{purchase}/retur', [PurchaseController::class, 'retur'])->name('purchase.retur');

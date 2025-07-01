@@ -22,7 +22,8 @@
                         <th class="px-4 py-2">Barang</th>
                         <th class="px-4 py-2">Jumlah</th>
                         <th class="px-4 py-2">Satuan</th>
-                        <th class="px-4 py-2">Harga Beli</th>
+                        <th class="px-4 py-2">Harga Satuan</th>
+                        <th class="px-4 py-2">Harga Total</th>
                         <th class="px-4 py-2">Status</th>
                         <th class="px-4 py-2">Aksi</th>
                     </tr>
@@ -36,6 +37,9 @@
                             <td class="px-4 py-2">{{ $purchase->jumlah }}</td>
                             <td class="px-4 py-2">{{ $purchase->barang->satuan ?? '-' }}</td>
                             <td class="px-4 py-2">Rp {{ number_format($purchase->harga_beli, 0, ',', '.') }}</td>
+                            <td class="px-4 py-2">
+                                Rp {{ number_format(($purchase->jumlah ?? 0) * ($purchase->harga_beli ?? 0), 0, ',', '.') }}
+                            </td>
                             <td class="px-4 py-2">
                                 <span class="inline-block px-2 py-1 rounded text-xs 
                                     {{ 
